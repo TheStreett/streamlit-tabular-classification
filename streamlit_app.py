@@ -99,7 +99,7 @@ def main():
 
     # Get the query parameter
     params = st.experimental_get_query_params()
-    if token not in params:
+    if "token" not in params:
         st.warning("Please insert the auth token as query parameter. " 
                    "e.g. https://share.streamlit.io/raudipra/"
                    "streamlit-tabular-classification/main?token=secret")
