@@ -115,7 +115,7 @@ def main():
         labels = []
         statuses = []
         data_frame = pd.read_csv(uploaded_file)
-        for _, row in data_frame.itertuples():
+        for row in data_frame.itertuples():
             try:
                 data = {}
                 for col in data_frame.columns:
