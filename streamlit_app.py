@@ -38,7 +38,7 @@ def download_data_sample(api_url, token):
 
         # Parsing the tabular data
         tabulars = json.loads(sample_tabulars['exampledata'])
-        df = pd.DataFrame(np.array([tabulars['data']]),
+        df = pd.DataFrame(np.array(tabulars['data']),
                           columns=tabulars['columns'])
 
         # Prepare the data sample in csv
