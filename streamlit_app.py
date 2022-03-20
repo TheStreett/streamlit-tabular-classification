@@ -42,7 +42,7 @@ def download_data_sample(api_url, token):
                           columns=tabulars['columns'])
 
         # Prepare the data sample in csv
-        csv_data = df.to_csv().encode('utf-8')
+        csv_data = df.to_csv(index=False).encode('utf-8')
         
         # Setup a download button
         btn = st.download_button(
@@ -64,7 +64,7 @@ def display_result(data_frame, labels, statuses):
     st.table(data_frame)
 
     # Prepare the data sample in csv
-    csv_data = data_frame.to_csv().encode('utf-8')
+    csv_data = data_frame.to_csv(index=False).encode('utf-8')
 
     # Setup a download button
     btn = st.download_button(
