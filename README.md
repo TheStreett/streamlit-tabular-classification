@@ -1,5 +1,5 @@
 # Streamlit Tabular Classification on AIModelShare Example
-This repository contains a sample streamlit web application that uses [AIModelShare](https://github.com/AIModelShare/aimodelshare) Playground as the model endpoint. This sample webapp is currently live on https://share.streamlit.io/raudipra/streamlit-image-classification/main
+This repository contains a sample streamlit web application that uses [AIModelShare](https://github.com/AIModelShare/aimodelshare) Playground as the model endpoint. This sample webapp is currently live on https://share.streamlit.io/raudipra/streamlit-tabular-classification/main
 
 ## How to install
 `pip3 install -r requirements.txt`.
