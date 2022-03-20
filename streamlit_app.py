@@ -116,7 +116,7 @@ def main():
         labels = []
         statuses = []
         data_frame = pd.read_csv(uploaded_file)
-        for row in data_frame.itertuples():
+        for _, row in data_frame.iterrows():
             try:
                 data = {}
                 for col in data_frame.columns:
@@ -150,7 +150,7 @@ def main():
                 logging.error(e)
 
                 # add label as None if necessary
-                if len(labels) < len(data_frame.shape[0]):
+                if len(labels) < data_frame.shape[0]:
                     labels.append(None)
                 statuses.append(False)
 
