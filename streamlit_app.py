@@ -189,7 +189,7 @@ def main():
 
         with col2:
             metric_placeholder = st.empty()
-            metric_placeholder.metric(label="Request count", value=len(statuses))
+            metric_placeholder.metric(label="Request count", value=0)
     
     if uploaded_file:
         labels = []
