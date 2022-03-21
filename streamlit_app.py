@@ -148,7 +148,7 @@ def main():
         labels = []
         statuses = []
         data_frame = pd.read_csv(uploaded_file)
-        columns = data_frame.columns()
+        columns = data_frame.columns
         for _, row in data_frame.iterrows():
             try:
                 # Classify the record
