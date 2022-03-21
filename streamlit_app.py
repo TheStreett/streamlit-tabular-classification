@@ -75,12 +75,44 @@ def display_result(data_frame, labels, statuses):
     )
 
 def display_pie_chart(sizes, labels):
-    fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
-    st.plotly_chart(fig, use_container_width=True)
+    data = [{"value": sizes[i], "name": labels[i]} for i in range(len(sizes))]
+    options = {
+        "tooltip": {"trigger": "item"},
+        "legend": {"top": "5%", "left": "center"},
+        "series": [
+            {
+                "name": "Prediction Statistics",
+                "type": "pie",
+                "radius": ["20%", "70%"],
+                "avoidLabelOverlap": False,
+                "itemStyle": {
+                    "borderRadius": 10,
+                    "borderColor": "#fff",
+                    "borderWidth": 2,
+                },
+                "label": {"show": False, "position": "center"},
+                "emphasis": {
+                    "label": {"show": True, "fontSize": "40", "fontWeight": "bold"}
+                },
+                "labelLine": {"show": False},
+                "data": data,
+            }
+        ],
+    }
+    st_echarts(
+        options=options, height="500px",
+    )
     
 def display_bar_chart(freqs, labels):
-    fig = px.bar(x=labels, y=freqs)
-    st.plotly_chart(fig, use_container_width=True)
+    options = {
+        "xAxis": {
+            "type": "category",
+            "data": labels,
+        },
+        "yAxis": {"type": "value"},
+        "series": [{"data": freqs, "type": "bar"}],
+    }
+    st_echarts(options=options, height="500px")
     
 def display_stats(labels):
     counter = Counter(labels)
@@ -90,8 +122,15 @@ def display_stats(labels):
     # Size or portion in pie chart
     sizes = [float(x) / sum(freqs) * 100 for x in freqs]
 
-    display_pie_chart(sizes, unique_labels)
-    display_bar_chart(freqs, unique_labels)
+    # Display prediction details
+    with st.container():
+        col1, col2 = st.columns(2)
+
+        with col1:
+            display_pie_chart(sizes, unique_labels)
+
+        with col2:
+            display_bar_chart(freqs, unique_labels)
 
 def predict(row, columns, api_url, token):
     # Prepare the uploaded csv into per row record in json
@@ -136,14 +175,22 @@ def main():
 
     st.header("Titanic Survival Classification")
 
-    uploaded_file = st.file_uploader(
-        label="Choose one csv and get the prediction",
-        type=["csv"],
-        accept_multiple_files=False,
-    )
+    with st.container():
+        col1, col2 = st.columns([3, 1])
 
-    download_data_sample(api_url, token)
-        
+        with col1:
+            uploaded_file = st.file_uploader(
+                label="Choose one csv and get the prediction",
+                type=["csv"],
+                accept_multiple_files=False,
+            )
+
+            download_data_sample(api_url, token)
+
+        with col2:
+            metric_placeholder = st.empty()
+            metric_placeholder.metric(label="Request count", value=len(statuses))
+    
     if uploaded_file:
         labels = []
         statuses = []
@@ -167,8 +214,9 @@ def main():
                     labels.append(None)
                 statuses.append(False)
 
-        display_result(data_frame, labels, statuses)
+        metric_placeholder.metric(label="Request count", value=len(statuses))
         display_stats(labels)
+        display_result(data_frame, labels, statuses)
 
 if __name__ == "__main__":
     main()
