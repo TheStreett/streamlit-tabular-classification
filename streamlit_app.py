@@ -175,6 +175,47 @@ def main():
 
     st.header("Titanic Survival Classification")
 
+    if st.checkbox("Show instruction"):
+        st.write("To build and run modelshare's streamlit app, you will need "
+                  "authorization token and modelshare's playground URL. "
+                  "You can obtain the auth token by signing in to www.modelshare.org "
+                  "and the playground URL by choosing any of available playground in "
+                  "www.modelshare.org")
+        st.write("Here are some important part of codes to classify tabular record"
+                 " using modelshare's playground url")
+        code = """
+            api_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
+            token = "secret"
+            data = {{
+                'col1': ['val1'],
+                'col2': ['val2'],
+                'col3': ['val3'],
+            }}
+            def predict(data, api_url, token):
+                data = json.dumps({"data": data})
+
+                # Set the path for prediction API
+                pred_url = api_url + "/prod/m"
+                
+                # Set the authorization based on query parameter 'token', 
+                # it is obtainable once you logged in to the modelshare website
+                headers = {
+                    "Content-Type": "application/json", 
+                    "authorizationToken": token,
+                }
+
+                # Send the request
+                prediction = requests.request("POST", pred_url, 
+                                              headers=headers, data=data)
+
+                # Parse the prediction
+                label = ast.literal_eval(prediction.text)[0]
+
+                return label
+            label = predict(data, api_url, token)
+        """
+        st.code(code, "python")
+
     with st.container():
         col1, col2 = st.columns([3, 1])
 
