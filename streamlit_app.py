@@ -188,6 +188,11 @@ def main():
                  " using modelshare's playground url")
 
         code = """
+import ast
+import json
+import requests
+import streamlit as st
+
 api_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
 token = st.experimental_get_query_params()['token'][0]
 data = {
