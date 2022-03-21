@@ -180,8 +180,8 @@ def main():
                   "authorization token and modelshare's playground URL. "
                   "You can obtain the auth token by signing in to www.modelshare.org "
                   "and the playground URL by choosing any of available playground in "
-                  "www.modelshare.org. To use it, pass the auth token as query "
-                  "parameter token on streamlit's URL, e.g. https://share.streamlit.io/user/"
+                  "www.modelshare.org. Pass the auth token to the app as a query "
+                  "parameter 'token' on streamlit's URL, e.g. https://share.streamlit.io/user/"
                   "apps-name/main?token=secret.")
 
         st.write("Here are some important part of codes to classify tabular record"
