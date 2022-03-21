@@ -175,7 +175,7 @@ def main():
 
     st.header("Titanic Survival Classification")
 
-    if st.checkbox("Show instruction"):
+    with st.expander("Show instruction"):
         st.write("To build and run modelshare's streamlit app, you will need "
                   "authorization token and modelshare's playground URL. "
                   "You can obtain the auth token by signing in to www.modelshare.org "
