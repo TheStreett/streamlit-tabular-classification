@@ -182,11 +182,11 @@ def main():
                   "and the playground URL by choosing any of available playground in "
                   "www.modelshare.org. To use it, pass the auth token as query "
                   "parameter token on streamlit's URL, e.g. https://share.streamlit.io/user/"
-                  "apps-name/main?token=secret".)
+                  "apps-name/main?token=secret.")
 
         st.write("Here are some important part of codes to classify tabular record"
                  " using modelshare's playground url")
-        
+
         code = """
 api_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
 token = st.experimental_get_query_params()['token'][0]
