@@ -93,6 +93,33 @@ def display_stats(labels):
     display_pie_chart(sizes, unique_labels)
     display_bar_chart(freqs, unique_labels)
 
+def predict(row, columns, api_url, token):
+    # Prepare the uploaded csv into per row record in json
+    data = {}
+    for col in columns:
+        data[col] = [row[col]]
+
+    data = json.dumps({"data": data})
+
+    # Set the path for prediction API
+    pred_url = api_url + "/prod/m"
+    
+    # Set the authorization based on query parameter 'token', 
+    # it is obtainable once you logged in to the modelshare website
+    headers = {
+        "Content-Type": "application/json", 
+        "authorizationToken": token,
+    }
+
+    # Send the request
+    prediction = requests.request("POST", pred_url, 
+                                  headers=headers, data=data)
+
+    # Parse the prediction
+    label = ast.literal_eval(prediction.text)[0]
+
+    return label
+
 def main():
     # Set the API url accordingly based on AIModelShare Playground API.
     api_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
@@ -118,35 +145,15 @@ def main():
     download_data_sample(api_url, token)
         
     if uploaded_file:
-        # Prepare the uploaded csv into per row record in json
         labels = []
         statuses = []
         data_frame = pd.read_csv(uploaded_file)
+        columns = data_frame.columns()
         for _, row in data_frame.iterrows():
             try:
-                data = {}
-                for col in data_frame.columns:
-                    data[col] = [row[col]]
+                # Classify the record
+                label = predict(row, columns, api_url, token)
 
-                data = json.dumps({"data": data})
-
-                # Set the path for prediction API
-                pred_url = api_url + "/prod/m"
-                
-                # Set the authorization based on query parameter 'token', 
-                # it is obtainable once you logged in to the modelshare website
-                headers = {
-                    "Content-Type": "application/json", 
-                    "authorizationToken": token,
-                }
-
-                # Send the request
-                prediction = requests.request("POST", pred_url, 
-                                              headers=headers, data=data)
-
-                # Parse the prediction
-                label = ast.literal_eval(prediction.text)[0]
-                
                 # Insert the label into labels
                 labels.append(label)
                 
