@@ -12,7 +12,7 @@ import streamlit as st
 import plotly.express as px
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-
+from streamlit_echarts import st_echarts
 
 def download_data_sample(api_url, token):
     try:
