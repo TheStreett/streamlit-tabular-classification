@@ -1,17 +1,14 @@
 import ast
 import json
+import uuid
 import logging
-import zipfile
-from io import BytesIO
+from datetime import datetime
 from collections import Counter
 
 import requests
 import numpy as np
 import pandas as pd
 import streamlit as st
-import plotly.express as px
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 from streamlit_echarts import st_echarts
 
 def download_data_sample(api_url, token):
@@ -54,20 +51,22 @@ def download_data_sample(api_url, token):
     except Exception as e:
         logging.error(e)
 
-def display_result(data_frame, labels, statuses):
+def display_result(data_frame, labels, statuses, datetimes, uuids):
     status_label = {
         True: "Success",
         False: "Failed",
     }
     data_frame = data_frame.assign(status=[status_label[x] for x in statuses])
-    data_frame = data_frame.assign(label=labels)
+    data_frame = data_frame.assign(result=labels)
+    data_frame = data_frame.assign(unique_id=uuids)
+    data_frame = data_frame.assign(time=datetimes)
     st.table(data_frame)
 
     # Prepare the data sample in csv
     csv_data = data_frame.to_csv(index=False).encode('utf-8')
 
     # Setup a download button
-    btn = st.download_button(
+    st.download_button(
         label="Download result",
         data=csv_data,
         file_name="export.csv",
@@ -132,13 +131,17 @@ def display_stats(labels):
         with col2:
             display_bar_chart(freqs, unique_labels)
 
-def predict(row, columns, api_url, token):
+def predict(row, columns, uuid_str, api_url, token):
     # Prepare the uploaded csv into per row record in json
     data = {}
     for col in columns:
         data[col] = [row[col]]
 
-    data = json.dumps({"data": data})
+    data = json.dumps({
+        "data": data,
+        "uuid": uuid_str,
+        "version": "mostrecent"
+    })
 
     # Set the path for prediction API
     pred_url = api_url + "/prod/m"
@@ -244,12 +247,23 @@ label = predict(data, api_url, token)
     if uploaded_file:
         labels = []
         statuses = []
+        uuids = []
+        datetimes = []
         data_frame = pd.read_csv(uploaded_file)
         columns = data_frame.columns
         for _, row in data_frame.iterrows():
             try:
+                # Create identifier for this prediction
+                uuid_str = str(uuid.uuid4())
+                uuids.append(uuid_str)
+                
+                # Capture the timestamp of prediction
+                now = datetime.now()
+                date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+                datetimes.append(date_time)
+
                 # Classify the record
-                label = predict(row, columns, api_url, token)
+                label = predict(row, columns, uuid_str, api_url, token)
 
                 # Insert the label into labels
                 labels.append(label)
@@ -266,7 +280,7 @@ label = predict(data, api_url, token)
 
         metric_placeholder.metric(label="Request count", value=len(statuses))
         display_stats(labels)
-        display_result(data_frame, labels, statuses)
+        display_result(data_frame, labels, statuses, datetimes, uuids)
 
 if __name__ == "__main__":
     main()
