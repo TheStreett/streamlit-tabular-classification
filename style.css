@@ -2,5 +2,5 @@ div[data-testid="column"] {
     border-style: solid;
     border-width: thin;
     border-color: gray;
-    padding: 2rem;
+    padding: 0.75rem;
 }
