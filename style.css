@@ -1,0 +1,5 @@
+div[data-testid="column"] {
+    border-style: solid;
+    border-width: medium;
+    border-color: gray;
+}

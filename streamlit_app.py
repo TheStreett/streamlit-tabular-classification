@@ -162,7 +162,14 @@ def predict(row, columns, uuid_str, api_url, token):
 
     return label
 
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+
 def main():
+    # Set custom CSS for whole layout
+    local_css("style.css")
+
     # Set the API url accordingly based on AIModelShare Playground API.
     api_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
 
