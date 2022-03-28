@@ -56,6 +56,12 @@ def display_result(data_frame, labels, statuses, datetimes, uuids):
         True: "Success",
         False: "Failed",
     }
+    
+    with st.container():
+        _, col2 = st.columns([4, 1])
+        with col2:
+            dl_button = st.empty()
+   
     data_frame = data_frame.assign(status=[status_label[x] for x in statuses])
     data_frame = data_frame.assign(result=labels)
     data_frame = data_frame.assign(unique_id=uuids)
@@ -66,7 +72,7 @@ def display_result(data_frame, labels, statuses, datetimes, uuids):
     csv_data = data_frame.to_csv(index=False).encode('utf-8')
 
     # Setup a download button
-    st.download_button(
+    dl_button.download_button(
         label="Download result",
         data=csv_data,
         file_name="export.csv",
