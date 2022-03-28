@@ -162,6 +162,7 @@ def predict(row, columns, uuid_str, api_url, token):
 
     return label
 
+# Add custom CSS for streamlit component
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
