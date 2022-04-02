@@ -1,4 +1,4 @@
-div[data-testid="stVerticalBlock"] > div > div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+div[data-testid="stVerticalBlock"] > div > div[data-testid="stVerticalBlock"] > div > div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
     border-style: solid;
     border-width: thin;
     border-color: gray;
