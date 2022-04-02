@@ -209,7 +209,7 @@ def main():
                     "as a query parameter 'token' on streamlit's URL, e.g. "
                     "https://share.streamlit.io/user/apps-name/main?token=secret.")
 
-        st.write("Here is a sample code to run a prediction of an image"
+        st.write("Here is a sample code to run a prediction of a tabular record"
                  " using modelshare's playground url")
 
         code = """
