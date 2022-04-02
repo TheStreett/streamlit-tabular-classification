@@ -11,16 +11,16 @@ import pandas as pd
 import streamlit as st
 from streamlit_echarts import st_echarts
 
-def download_data_sample(api_url, token):
+def download_data_sample(playground_url, auth_token):
     try:
         # Set the path for eval API
-        eval_url = api_url + "/prod/eval"
+        eval_url = playground_url + "/prod/eval"
         
         # Set the authorization based on query parameter 'token', 
         # it is obtainable once you logged in to the modelshare website
         headers = {
             "Content-Type": "application/json", 
-            "authorizationToken": token,
+            "authorizationToken": auth_token,
         }
 
         # Set the body indicating we want to get sample data from eval API
@@ -46,7 +46,8 @@ def download_data_sample(api_url, token):
             label="Download data sample",
             data=csv_data,
             file_name="tabular_sample.csv",
-            mime="text/csv"
+            mime="text/csv",
+            help="Download in-built example file to demo the app"
         )
 
     except Exception as e:
@@ -140,7 +141,7 @@ def display_stats(labels):
         with col2:
             display_bar_chart(freqs, unique_labels)
 
-def predict(row, columns, uuid_str, api_url, token):
+def predict(row, columns, uuid_str, playground_url, auth_token):
     # Prepare the uploaded csv into per row record in json
     data = {}
     for col in columns:
@@ -153,13 +154,13 @@ def predict(row, columns, uuid_str, api_url, token):
     })
 
     # Set the path for prediction API
-    pred_url = api_url + "/prod/m"
+    pred_url = playground_url + "/prod/m"
     
     # Set the authorization based on query parameter 'token', 
     # it is obtainable once you logged in to the modelshare website
     headers = {
         "Content-Type": "application/json", 
-        "authorizationToken": token,
+        "authorizationToken": auth_token,
     }
 
     # Send the request
@@ -181,7 +182,7 @@ def main():
     local_css("style.css")
 
     # Set the API url accordingly based on AIModelShare Playground API.
-    api_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
+    playground_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
 
     # Get the query parameter
     params = st.experimental_get_query_params()
@@ -189,22 +190,26 @@ def main():
         st.warning("Please insert the auth token as query parameter. " 
                    "e.g. https://share.streamlit.io/raudipra/"
                    "streamlit-tabular-classification/main?token=secret")
-        token = ""
+        auth_token = ""
     else:
-        token = params['token'][0]
+        auth_token = params['token'][0]
 
     st.header("Titanic Survival Classification")
 
-    with st.expander("Show instruction"):
-        st.write("To build and run modelshare's streamlit app, you will need "
-                  "authorization token and modelshare's playground URL. "
-                  "You can obtain the auth token by signing in to www.modelshare.org "
-                  "and the playground URL by choosing any available playground in "
-                  "www.modelshare.org. Use the sample code below and pass the auth token to the "
-                  "app as a query parameter 'token' on streamlit's URL, e.g. "
-                  "https://share.streamlit.io/user/apps-name/main?token=secret.")
+    with st.expander("Show developer's guide"):
+        st.markdown("#### Guide to build a streamlit app with modelshare's API.")
+        st.markdown("What you'll need: \n"
+                    "- auth_token: modelshare's user authorization "
+                    "token. It can be retrieved after signing in to "
+                    "www.modelshare.org \n"
+                    "- playground_url: API endpoint url from any modelshare's"
+                    " playground to do prediction. \n\n")
+        
+        st.write("Use the sample code below and pass the auth_token "
+                    "as a query parameter 'token' on streamlit's URL, e.g. "
+                    "https://share.streamlit.io/user/apps-name/main?token=secret.")
 
-        st.write("Here are some important part of codes to classify tabular record"
+        st.write("Here is a sample code to run a prediction of an image"
                  " using modelshare's playground url")
 
         code = """
@@ -213,24 +218,24 @@ import json
 import requests
 import streamlit as st
 
-api_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
-token = st.experimental_get_query_params()['token'][0]
+playground_url = "https://n0l8kcy3wh.execute-api.us-east-1.amazonaws.com"
+auth_token = st.experimental_get_query_params()['token'][0]
 data = {
     'col1': ['val1'],
     'col2': ['val2'],
     'col3': ['val3'],
 }
-def predict(data, api_url, token):
+def predict(data, playground_url, auth_token):
     data = json.dumps({"data": data})
 
     # Set the path for prediction API
-    pred_url = api_url + "/prod/m"
+    pred_url = playground_url + "/prod/m"
     
     # Set the authorization based on query parameter 'token', 
     # it is obtainable once you logged in to the modelshare website
     headers = {
         "Content-Type": "application/json", 
-        "authorizationToken": token,
+        "authorizationToken": auth_token,
     }
 
     # Send the request
@@ -241,7 +246,7 @@ def predict(data, api_url, token):
     label = ast.literal_eval(prediction.text)[0]
 
     return label
-label = predict(data, api_url, token)
+label = predict(data, playground_url, auth_token)
         """
         st.code(code, "python")
 
@@ -255,7 +260,7 @@ label = predict(data, api_url, token)
                 accept_multiple_files=False,
             )
 
-            download_data_sample(api_url, token)
+            download_data_sample(playground_url, auth_token)
 
         with col2:
             metric_placeholder = st.empty()
@@ -280,7 +285,7 @@ label = predict(data, api_url, token)
                 datetimes.append(date_time)
 
                 # Classify the record
-                label = predict(row, columns, uuid_str, api_url, token)
+                label = predict(row, columns, uuid_str, playground_url, auth_token)
 
                 # Insert the label into labels
                 labels.append(label)
