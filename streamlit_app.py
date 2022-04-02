@@ -48,6 +48,7 @@ def download_data_sample(api_url, token):
             file_name="tabular_sample.csv",
             mime="text/csv"
         )
+
     except Exception as e:
         logging.error(e)
 
@@ -57,10 +58,12 @@ def display_result(data_frame, labels, statuses, datetimes, uuids):
         False: "Failed",
     }
     
+    # Made it this way to uniquely set the css
     with st.container():
-        _, col2 = st.columns([4, 1])
-        with col2:
-            dl_button = st.empty()
+        with st.container():
+            _, col2 = st.columns([2, 1])
+            with col2:
+                dl_button = st.empty()
    
     data_frame = data_frame.assign(status=[status_label[x] for x in statuses])
     data_frame = data_frame.assign(result=labels)

@@ -4,3 +4,7 @@ div[data-testid="column"] {
     border-color: gray;
     padding: 0.75rem;
 }
+
+div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalblock"] > div[data-testid="column"] {
+    border-style: none;
+}
