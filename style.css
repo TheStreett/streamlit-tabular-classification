@@ -5,6 +5,6 @@ div[data-testid="column"] {
     padding: 0.75rem;
 }
 
-div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalblock"] > div[data-testid="column"] {
+div[data-testid="stVerticalBlock"] > div > div[data-testid="stVerticalBlock"] > div[data-testid="stHorizontalblock"] > div[data-testid="column"] {
     border-style: none;
 }
