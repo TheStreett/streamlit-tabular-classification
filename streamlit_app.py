@@ -61,7 +61,7 @@ def display_result(data_frame, labels, statuses, datetimes, uuids):
     # Made it this way to uniquely set the css
     with st.container():
         with st.container():
-            _, col2 = st.columns([5, 2])
+            _, col2 = st.columns([3, 1])
             with col2:
                 dl_button = st.empty()
    
