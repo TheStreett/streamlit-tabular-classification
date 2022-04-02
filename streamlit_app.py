@@ -68,11 +68,11 @@ def display_result(data_frame, labels, statuses, datetimes, uuids):
    
     data_frame = data_frame.assign(status=[status_label[x] for x in statuses])
     data_frame = data_frame.assign(result=labels)
-    data_frame = data_frame.assign(unique_id=uuids)
     data_frame = data_frame.assign(time=datetimes)
     st.table(data_frame)
 
     # Prepare the data sample in csv
+    data_frame = data_frame.assign(unique_id=uuids)
     csv_data = data_frame.to_csv(index=False).encode('utf-8')
 
     # Setup a download button
